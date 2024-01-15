@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ScoreItem
   - Circle
+  - Enemy
   layers:
   - Default
   - TransparentFX
