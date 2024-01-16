@@ -1,23 +1,22 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] ParticleSystem[] _particleEffect;
-    [SerializeField] Image _attackCount;
     RaycastHit _clickHit;
     Vector3 _clickPosition;
     int _particleCount = 0;
-    float _maxAttackCount = 0.7f;
-    public bool _isAttackCoolDown { private set; get; }
+    [SerializeField] float _clickCoolTime = 3f;
+    bool _isAttackCoolTime;
     private void Awake()
     {
-        _attackCount.fillAmount = 0.7f;
     }
     void Update()
     {
-        if (!_isAttackCoolDown)
+        if (!_isAttackCoolTime)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -27,21 +26,20 @@ public class PlayerController : MonoBehaviour
                     _clickPosition = _clickHit.point;
                     Instantiate(_particleEffect[_particleCount], _clickPosition, Quaternion.identity);
                 }
-                if (_attackCount.fillAmount != 0)
-                {
-                    if (_isAttackCoolDown == false)
-                    {
-                        float _fillAmountValue = _attackCount.fillAmount;
-                        _attackCount.DOFillAmount(_fillAmountValue - 0.1f, 0.3f);
-                    }
-                }
+                AttackCoolTime();
+                StartCoroutine(CoolTime());
             }
         }
-        if (_attackCount.fillAmount == 0)
-        {
-            _isAttackCoolDown = true;
-            _attackCount.DOFillAmount(_maxAttackCount, 1f)
-                .OnComplete(() => _isAttackCoolDown = false);
-        }
+    }
+
+    IEnumerator CoolTime()
+    {
+        yield return new WaitForSeconds(_clickCoolTime);
+        AttackCoolTime();
+    }
+
+    private void AttackCoolTime()
+    {
+        _isAttackCoolTime = !_isAttackCoolTime;
     }
 }
