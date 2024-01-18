@@ -1,45 +1,23 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] ParticleSystem[] _particleEffect;
-    RaycastHit _clickHit;
-    Vector3 _clickPosition;
-    int _particleCount = 0;
-    [SerializeField] float _clickCoolTime = 3f;
-    bool _isAttackCoolTime;
-    private void Awake()
-    {
-    }
+    [SerializeField] ParticleSystem[] _particleEffect;  //パーティクルのプレハブ
+    RaycastHit _clickHit;                               //クリックする場所に刺すレイ
+    Vector3 _clickPosition;                             //レイの座標を記録する変数
     void Update()
     {
-        if (!_isAttackCoolTime)
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            //クリックした位置にParticleを生成する
+            Ray mousePos = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(mousePos, out _clickHit))
             {
-                Ray mousePos = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(mousePos, out _clickHit))
-                {
-                    _clickPosition = _clickHit.point;
-                    Instantiate(_particleEffect[_particleCount], _clickPosition, Quaternion.identity);
-                }
-                AttackCoolTime();
-                StartCoroutine(CoolTime());
+                _clickPosition = _clickHit.point;
+                Instantiate(_particleEffect[0], _clickPosition, Quaternion.identity);
             }
         }
-    }
-
-    IEnumerator CoolTime()
-    {
-        yield return new WaitForSeconds(_clickCoolTime);
-        AttackCoolTime();
-    }
-
-    private void AttackCoolTime()
-    {
-        _isAttackCoolTime = !_isAttackCoolTime;
     }
 }

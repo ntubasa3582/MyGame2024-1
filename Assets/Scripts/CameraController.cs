@@ -55,7 +55,20 @@ public class CameraController : MonoBehaviour
 
     public void LowerRight()
     {
-        _isMove = false;
+        _isMove = true;
+        Move(0.05f, -0.05f);
+    }
+
+    public void UpperLeft()
+    {
+        _isMove = true;
+        Move(-0.05f, 0.05f);
+    }
+
+    public void LowerLeft()
+    {
+        _isMove = true;
+        Move(-0.05f, -0.05f);
     }
 
     public void NoMove()
