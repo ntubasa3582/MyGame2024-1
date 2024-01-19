@@ -1,12 +1,16 @@
 using UnityEngine;
-using DG.Tweening;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    LevelUpValue levelUpValue;
     [SerializeField] ParticleSystem[] _particleEffect;  //パーティクルのプレハブ
     RaycastHit _clickHit;                               //クリックする場所に刺すレイ
     Vector3 _clickPosition;                             //レイの座標を記録する変数
+    public float Damage { get; private set; } = 1f;
+    private void Awake()
+    {
+        levelUpValue = GameObject.FindAnyObjectByType<LevelUpValue>();
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -20,4 +24,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 }

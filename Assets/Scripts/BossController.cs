@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class BossController : MonoBehaviour
 {
     PlayerController playerController;
     GameManager gameManager;
-    float _hp = 1;       //エネミーのHP
+    float _hp = 15;                      //ボスのHP 
     private void Awake()
     {
         playerController = GameObject.FindAnyObjectByType<PlayerController>();
@@ -33,7 +33,7 @@ public class EnemyController : MonoBehaviour
     {
         //エフェクトとタイミングを合わせるために遅延している
         yield return new WaitForSeconds(delayTime);
-        gameManager.AddEnemyKillCount();
+        gameManager.BossKillScoreCount();
         Destroy(gameObject);
     }
 }

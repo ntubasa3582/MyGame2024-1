@@ -1,63 +1,60 @@
-using System.Collections;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] Text _MoneyText;
-    Slider _enemyScoreSlider;
-    public static GameManager instance;
-    int _enemyKillScore = 0;                                               //エネミーが倒されたらスコアを増やす
-    [SerializeField,Header("倒した時に追加で貰える金")] int[] _placeMoney; //レベルごとに貰える金の量が変わる
-    [SerializeField, Header("強化に必要な金")] int[] _levelUpMoney;        //強化に必要な金
-    int _getMoneyValue = 0;                                                //貰える金の値を入れておく変数
-    int _addCount = -1;                                                     //_placeMoneyのカウント用変数
-    int _bossEmergenceValue = 0;
+    UIManager uiManager;
+    EnemyManager enemyManager;
+    public float _enemyKillCount { get; private set; } = 0;       //エネミーを倒した時にカウントする変数
+    public float _money { get; private set; } = 0;                //強化できる金
+    public float _bossEmergenceValue { private get; set; } = 98;   //ボスが出現するまでをカウントする
 
     private void Awake()
     {
-        _enemyScoreSlider = GameObject.FindAnyObjectByType<Slider>();
-        _enemyScoreSlider.value = 0;
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        uiManager = GameObject.FindAnyObjectByType<UIManager>();
+        enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
     }
 
     private void Update()
     {
-        if (_bossEmergenceValue <= 100)
+        //エネミーの倒した数が100の時にボスを出現させる
+        if (_bossEmergenceValue >= 100)
         {
-
+            _bossEmergenceValue = 0;
+            enemyManager.BossInstance();
         }
     }
 
-    public void AddScoreCount()
+    public void AddEnemyKillCount()
     {
+        //エネミーを倒したら所持金を増やす   
+        _money += 1;                                                         
+        _bossEmergenceValue += 1;
+        uiManager.AddMoneyText(_money);
+        //ボス出現ゲージを表示するスライダーに値を渡す
+        uiManager.AddSliderValue(_bossEmergenceValue);    
 
-        _enemyKillScore += 1 + _getMoneyValue;
-        _enemyScoreSlider.value += 1 + _getMoneyValue;
-        _MoneyText.text = _enemyKillScore.ToString("0000");
+    }
+
+    public void BossKillScoreCount()
+    {
+        //ボスを倒したら所持金を100増やす
+        _money += 100;
+        _bossEmergenceValue = 0;
+        uiManager.AddSliderValue(_bossEmergenceValue);
     }
 
     public void GetMoneyUp()
     {
-        //金が必要量あったら強化する
-        if (_levelUpMoney[_addCount + 1] <= _enemyKillScore)
+        if (_money >= LevelUpValue.Instance._moneyNeeded[0])
         {
-            _addCount += 1;
-            _getMoneyValue = _placeMoney[_addCount];
-            _enemyKillScore -= _levelUpMoney[_addCount];
-            Debug.Log(_enemyKillScore);
-            _MoneyText.text = _enemyKillScore.ToString("0000");
+            //続き
         }
-
     }
 
-
+    public void AttackSizeUp()
+    {
+        //金が必要量あったらエフェクトのサイズを大きくする
+    }
 }
