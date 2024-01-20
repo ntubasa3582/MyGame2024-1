@@ -6,14 +6,16 @@ public class GameManager : MonoBehaviour
 {
     UIManager uiManager;
     EnemyManager enemyManager;
+    LevelUpValue levelUpValue;
     public float _enemyKillCount { get; private set; } = 0;       //エネミーを倒した時にカウントする変数
-    public float _money { get; private set; } = 0;                //強化できる金
+    public float _money { get;private set; } = 0;                //強化できる金
     public float _bossEmergenceValue { private get; set; } = 98;   //ボスが出現するまでをカウントする
 
     private void Awake()
     {
         uiManager = GameObject.FindAnyObjectByType<UIManager>();
         enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
+        levelUpValue = gameObject.GetComponent<LevelUpValue>();
     }
 
     private void Update()
@@ -23,6 +25,10 @@ public class GameManager : MonoBehaviour
         {
             _bossEmergenceValue = 0;
             enemyManager.BossInstance();
+        }
+        if (_bossEmergenceValue == 25)
+        {
+
         }
     }
 
@@ -43,14 +49,13 @@ public class GameManager : MonoBehaviour
         _money += 100;
         _bossEmergenceValue = 0;
         uiManager.AddSliderValue(_bossEmergenceValue);
+        uiManager.AddMoneyText (_money);
     }
 
-    public void GetMoneyUp()
+    public void ChangeMoneyValue(float value)
     {
-        if (_money >= LevelUpValue.Instance._moneyNeeded[0])
-        {
-            //続き
-        }
+        _money += value;
+        uiManager.AddMoneyText(_money);
     }
 
     public void AttackSizeUp()

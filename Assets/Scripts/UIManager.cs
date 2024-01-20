@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
         
     }
 
+
+
     public void AddSliderValue(float value)
     {
         _enemyScoreSlider.value = value;
