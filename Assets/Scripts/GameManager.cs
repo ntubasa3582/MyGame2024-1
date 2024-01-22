@@ -7,15 +7,18 @@ public class GameManager : MonoBehaviour
     UIManager uiManager;
     EnemyManager enemyManager;
     LevelUpValue levelUpValue;
+    RandomNumSystem randomNum;
     public float _enemyKillCount { get; private set; } = 0;       //エネミーを倒した時にカウントする変数
     public float _money { get;private set; } = 0;                //強化できる金
     public float _bossEmergenceValue { private get; set; } = 98;   //ボスが出現するまでをカウントする
+    float _bossDeathRewardValue = 0;
 
     private void Awake()
     {
         uiManager = GameObject.FindAnyObjectByType<UIManager>();
         enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
-        levelUpValue = gameObject.GetComponent<LevelUpValue>();
+        levelUpValue = GameObject.FindAnyObjectByType<LevelUpValue>();
+        randomNum = GameObject.FindAnyObjectByType<RandomNumSystem>();
     }
 
     private void Update()
@@ -23,12 +26,13 @@ public class GameManager : MonoBehaviour
         //エネミーの倒した数が100の時にボスを出現させる
         if (_bossEmergenceValue >= 100)
         {
+            for (int i = 0; i < 3; i++)
+            {
+                BossDeathReward();
+            }
             _bossEmergenceValue = 0;
             enemyManager.BossInstance();
-        }
-        if (_bossEmergenceValue == 25)
-        {
-
+            Debug.Log("ボスを倒したら" + _bossDeathRewardValue);
         }
     }
 
@@ -61,5 +65,28 @@ public class GameManager : MonoBehaviour
     public void AttackSizeUp()
     {
         //金が必要量あったらエフェクトのサイズを大きくする
+    }
+
+    public void BossDeathReward()
+    {
+        //ボス撃破時に増える報酬を決めるメソッド
+        _bossEmergenceValue += 1;
+        randomNum.ChooseStart();
+        switch (randomNum.ChooseStart())
+        {
+
+            case 0:
+                _bossDeathRewardValue += 10;
+                return;
+            case 1:
+                _bossDeathRewardValue += 5;
+                return;
+            case 2:
+                _bossDeathRewardValue += 2.5f;
+                return;
+            case 3:
+                _bossDeathRewardValue += 1.5f;
+                return;
+        }
     }
 }

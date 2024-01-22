@@ -897,9 +897,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1256940662}
+      - m_Target: {fileID: 1256940660}
         m_TargetAssemblyTypeName: RandomNumSystem, Assembly-CSharp
-        m_MethodName: ChooseStart10
+        m_MethodName: 
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1280,12 +1280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 777e1c0619fe2da4daf06c4c95232ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nums: 01000000190000001900000064000000
-  name:
-  - UR
-  - R
-  - NR
-  - R
+  weights: 010000000a0000002700000032000000
 --- !u!1 &1290090125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1824,7 +1819,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1706240754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1846,7 +1841,7 @@ MonoBehaviour:
   _spawnPositionZ:
   - 6
   - 13
-  _enemySpawnInterval: 1
+  _enemySpawnInterval: 0.5
 --- !u!4 &1706240755
 Transform:
   m_ObjectHideFlags: 0
