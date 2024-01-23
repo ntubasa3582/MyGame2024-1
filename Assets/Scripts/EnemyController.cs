@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Attackのタグが付いているオブジェクトに触れたらHPを減らす
-        if (other.gameObject.tag == "Attack")
+        if (other.gameObject.CompareTag("Attack"))
         {
             _hp -= playerController.Damage;
         }

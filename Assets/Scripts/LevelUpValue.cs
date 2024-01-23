@@ -1,21 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelUpValue : MonoBehaviour
 {
+
     GameManager gameManager;
+    EnemyManager enemyManager;
+    [SerializeField] List<Value> _value = new List<Value>();
     public static LevelUpValue Instance;
-    [SerializeField,Header("")] float[] _moneyNeeded;                           //0+レベルアップに必要な金
-    [SerializeField, Header("済み")] float[] _getMoneyPlace;                    //1+倒した時に追加で貰える金
-    [SerializeField, Header("まだ")] float[] _enemyInstanceSpeedPlace;          //2+エネミー生成時のインターバルを短くする
-    [SerializeField, Header("なし")] float[] _enemyHpPlace;                     //3+エネミーのHPを増やす
-    [SerializeField, Header("まだ")] float[] _effectInstancePlace;              //4+攻撃エフェクトの数を増やす
-    [SerializeField, Header("まだ")] float[] _effectSizePlace;                  //5+攻撃エフェクトのサイズを大きくする
-    [SerializeField, Header("なし")] float[] _playerDamagePlace;                //6:プレイヤーがエネミーに与えるダメージを上げる
-    float[] _valueStorage = new float[7];                       //上の配列の各要素を入れておく変数
-    public int[] _valueCount { get; private set; } = new int[7];
+    public float[] _valueStorage { get; private set; } = new float[7];          //上の配列の各要素を入れておく変数
+    public int[] _levelCount { get; private set; } = new int[7];
 
     void Awake()
     {
@@ -28,16 +22,42 @@ public class LevelUpValue : MonoBehaviour
             Destroy(gameObject);
         }
         gameManager = GameObject.FindAnyObjectByType<GameManager>();
+        enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
     }
 
     public void LevelUpMoney()
     {
-        if (gameManager._money >= _moneyNeeded[_valueCount[1]])
+        //エネミー撃破時に貰える金の量が増える
+        if (gameManager._money > _value[_levelCount[1]]._moneyNeeded)
         {
-            gameManager.ChangeMoneyValue(- _moneyNeeded[_valueCount[1]]);
-            _valueStorage[1] = Array.IndexOf(_getMoneyPlace, _valueCount[1]);
-            _valueCount[1] += 1;
-            Debug.Log(_valueCount[1] + "アップ");
+            _valueStorage[1] = _value[_levelCount[1]]._getMoneyPlace;
+            gameManager.ChangeMoneyValue( -_value[_levelCount[1]]._moneyNeeded);
+            _levelCount[1] += 1;
+            Debug.Log("敵を倒したら" + _valueStorage[1] + "倍になる");
+        }
+    }
+
+    public void EnemyInstanceSpeed()
+    {
+        //エネミーの生成時間が短縮される
+        if (gameManager._money > _value[_levelCount[2]]._moneyNeeded)
+        {
+            _valueStorage[2] = _value[_levelCount[2]]._enemyInstanceSpeedUp;
+            gameManager.ChangeMoneyValue(-_value[_levelCount[2]]._moneyNeeded);
+            _levelCount[2] += 1;
+            Debug.Log("敵を倒したら" + _valueStorage[2] + "倍になる");
+        }
+    }
+
+    public void EffectSizeUp()
+    {
+        //アタックエフェクトのサイズが大きくなる
+        if (gameManager._money > _value[_levelCount[4]]._moneyNeeded)
+        {
+            _valueStorage[4] = _value[_levelCount[4]]._effectSizePlace;
+            gameManager.ChangeMoneyValue(-_value[_levelCount[4]]._moneyNeeded);
+            _levelCount[4] += 1;
+            Debug.Log("敵を倒したら" + _valueStorage[4] + "倍になる");
         }
     }
 

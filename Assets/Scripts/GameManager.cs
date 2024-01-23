@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,8 +7,8 @@ public class GameManager : MonoBehaviour
     LevelUpValue levelUpValue;
     RandomNumSystem randomNum;
     public float _enemyKillCount { get; private set; } = 0;       //エネミーを倒した時にカウントする変数
-    public float _money { get;private set; } = 0;                //強化できる金
-    public float _bossEmergenceValue { private get; set; } = 98;   //ボスが出現するまでをカウントする
+    public float _money { get;private set; } = 100;                //強化できる金
+    public float _bossEmergenceValue { private get; set; } = 0;   //ボスが出現するまでをカウントする
     float _bossDeathRewardValue = 0;
 
     private void Awake()
@@ -32,19 +30,19 @@ public class GameManager : MonoBehaviour
             }
             _bossEmergenceValue = 0;
             enemyManager.BossInstance();
-            Debug.Log("ボスを倒したら" + _bossDeathRewardValue);
+            Debug.Log("ボスを倒したら報酬" + _bossDeathRewardValue + "倍");
         }
+        _money = _money;
     }
 
     public void AddEnemyKillCount()
     {
         //エネミーを倒したら所持金を増やす   
-        _money += 1;                                                         
+        _money += 1+ levelUpValue._valueStorage[1];                                                         
         _bossEmergenceValue += 1;
         uiManager.AddMoneyText(_money);
         //ボス出現ゲージを表示するスライダーに値を渡す
         uiManager.AddSliderValue(_bossEmergenceValue);    
-
     }
 
     public void BossKillScoreCount()
@@ -58,13 +56,9 @@ public class GameManager : MonoBehaviour
 
     public void ChangeMoneyValue(float value)
     {
+        //金の値を変える
         _money += value;
         uiManager.AddMoneyText(_money);
-    }
-
-    public void AttackSizeUp()
-    {
-        //金が必要量あったらエフェクトのサイズを大きくする
     }
 
     public void BossDeathReward()

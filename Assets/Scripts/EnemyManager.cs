@@ -40,7 +40,7 @@ public class EnemyManager : MonoBehaviour
         float xR = 0; float zR = 0;
         xR = Random.Range(_spawnPositionX[0], _spawnPositionX[1]);
         zR = Random.Range(_spawnPositionZ[0], _spawnPositionZ[1]);
-        Instantiate(_enemyPrefab, new Vector3(xR, 0, zR), Quaternion.identity);
+        Instantiate(_enemyPrefab, new Vector3(xR, 1, zR), Quaternion.identity);
     }
 
     public void BossInstance()
@@ -48,5 +48,11 @@ public class EnemyManager : MonoBehaviour
         //決められた位置にボスを出現させる
         Vector3 bossPosition = new Vector3(_bossSpawnPosition.transform.position.x, _bossSpawnPosition.transform.position.y, _bossSpawnPosition.transform.position.z);
         Instantiate(_bossEnemyPrefab, bossPosition, Quaternion.identity);
+    }
+
+    public void SpawnIntervalValueChange(float value)
+    {
+        //エネミの生成インターバル
+        _enemySpawnInterval -= value;
     }
 }
