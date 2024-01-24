@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     public void BossKillScoreCount()
     {
         //ƒ{ƒX‚ğ“|‚µ‚½‚çŠ‹à‚ğ100‘‚â‚·
-        _money += 100;
+        _money += 100 * _bossDeathRewardValue;
         _bossEmergenceValue = 0;
         uiManager.AddSliderValue(_bossEmergenceValue);
         uiManager.AddMoneyText (_money);

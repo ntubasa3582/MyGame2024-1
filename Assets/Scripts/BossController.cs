@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BossController : MonoBehaviour
+public class BossController : EnemyController
 {
     PlayerController playerController;
     GameManager gameManager;
