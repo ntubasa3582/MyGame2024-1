@@ -6,10 +6,9 @@ public class GameManager : MonoBehaviour
     EnemyManager enemyManager;
     LevelUpValue levelUpValue;
     RandomNumSystem randomNum;
-    public float _enemyKillCount { get; private set; } = 0;       //エネミーを倒した時にカウントする変数
-    public float _money { get;private set; } = 100;                //強化できる金
-    public float _bossEmergenceValue { private get; set; } = 0;   //ボスが出現するまでをカウントする
-    float _bossDeathRewardValue = 0;
+    public float _money { get;private set; } = 100;                 //強化できる金
+    public float _bossEmergenceValue { private get; set; } = 0;     //ボスが出現するまでをカウントする
+    float _bossDeathRewardValue = 0;                                //ボスを倒した時の報酬を入れる変数
 
     private void Awake()
     {
@@ -32,7 +31,6 @@ public class GameManager : MonoBehaviour
             enemyManager.BossInstance();
             Debug.Log("ボスを倒したら報酬" + _bossDeathRewardValue + "倍");
         }
-        _money = _money;
     }
 
     public void AddEnemyKillCount()
@@ -42,7 +40,7 @@ public class GameManager : MonoBehaviour
         _bossEmergenceValue += 1;
         uiManager.AddMoneyText(_money);
         //ボス出現ゲージを表示するスライダーに値を渡す
-        uiManager.AddSliderValue(_bossEmergenceValue);    
+        uiManager.AddSliderValue(_bossEmergenceValue);   
     }
 
     public void BossKillScoreCount()

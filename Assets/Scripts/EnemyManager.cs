@@ -1,58 +1,94 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
-    [SerializeField] GameObject _enemyPrefab;         //エネミーのプレハブ
-    [SerializeField] GameObject _bossEnemyPrefab;     //ボスのプレハブ
-    [SerializeField] GameObject _bossSpawnPosition;   //ボスの出現位置
-    [SerializeField] float[] _spawnPositionX;         //エネミーのX座標の出現位置
-    [SerializeField] float[] _spawnPositionZ;         //エネミーのY座標の出現位置
-    [SerializeField] float _enemySpawnInterval = 0;   //エネミーの生成インターバル
-    float _time = 0;                                  //時間を入れる変数
-    bool _isBoss = false;                             //ボスが出現しているかどうかの変数
+    UIManager _uiManager;
+    //ObjectPool _pool = new ObjectPool<GameObject>
+    //(
+    //    createFunc: funcCreate,
+    //    actionOnGet: funcOnGet,
+    //    actionOnRelease: funcOnRelase,
+    //    actionOnDestroy: funcOnDestroy,
+    //    collectionCheck: true,
+    //    defaultCapacity: 10,
+    //    maxSize: 10
+    //);
+    [SerializeField] GameObject[] _enemyPrefabs;                //エネミーのプレハブ
+    [SerializeField] GameObject[] _spawnPoints;                 //エネミーのスポーン場所のプレハブ
+    [SerializeField] float[] _spawnPositionX;                   //エネミーのX座標の出現位置
+    [SerializeField] float[] _spawnPositionZ;                   //エネミーのY座標の出現位置
+    public int _enemyInstanceCount { get; private set; }        //エネミーの生成カウント
+    //public int _enemyKillCount { get; private set; }            //エネミーを倒した時にカウントする変数
+    public int _enemyUpperLimit { get; private set; } = 10;    //エネミーの生成上限
+    float _time = 0;                                            //時間をいれる変数
+    public float _interval { get; private set; } = 1.5f;        //エネミーの生成にかかる時間
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
-        _time = 10;
+        _time = 10; //最初にエネミーを生成するために値を入れておく
+        _uiManager = GameObject.FindObjectOfType<UIManager>();
     }
 
     private void Update()
     {
-        if (!_isBoss)
+        //一定時間ごとにエネミーを生成
+        if (_enemyUpperLimit <= _enemyInstanceCount)
         {
-            _time += Time.deltaTime;
-            //一定時間ごとにエネミーを出現させる
-            if (_enemySpawnInterval < _time)
-            {
-                RandomPos();
-                _time = 0;
-            }
+            _time = 0;
+        }
+        _time += Time.deltaTime;
+        if (_time > _interval)
+        {
+            EnemyInstance(0);
+            EnemyInstance(1);
+            EnemyInstance(2);
+            _time = 0;
         }
     }
-
-    public void RandomPos()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count">生成したい場所のプレハブの番号</param>
+    public void EnemyInstance(int count)
     {
         //決められたランダムな位置にエネミーを出現させる
         float xR = 0; float zR = 0;
         xR = Random.Range(_spawnPositionX[0], _spawnPositionX[1]);
         zR = Random.Range(_spawnPositionZ[0], _spawnPositionZ[1]);
-        Instantiate(_enemyPrefab, new Vector3(xR, 1, zR), Quaternion.identity);
+        Vector3 _spawnPos = new Vector3(_spawnPoints[count].transform.position.x + xR, _spawnPoints[count].transform.position.y + 1.2f, _spawnPoints[count].transform.position.z + zR);
+        Instantiate(_enemyPrefabs[0], _spawnPos, Quaternion.identity);
+        AddEnemyInstanceCount(1);
     }
 
     public void BossInstance()
     {
         //決められた位置にボスを出現させる
-        Vector3 bossPosition = new Vector3(_bossSpawnPosition.transform.position.x, _bossSpawnPosition.transform.position.y, _bossSpawnPosition.transform.position.z);
-        Instantiate(_bossEnemyPrefab, bossPosition, Quaternion.identity);
+        Vector3 bossPosition = new Vector3(0, 0, 0);
+        Instantiate(_enemyPrefabs[0], bossPosition, Quaternion.identity);
+        AddEnemyInstanceCount(1);
+    }
+    public void AddEnemyKillCount(int count)
+    {
+        //_enemyKillCountの値を増やす
+        _enemyInstanceCount -= count;
+        _uiManager.AddEnemyText(_enemyInstanceCount);
+    }
+    public void AddEnemyInstanceCount(int count)
+    {
+        //_enemyInstanceCountの値を増やす
+        _enemyInstanceCount += count;
+        _uiManager.AddEnemyText(_enemyInstanceCount);
     }
 
-    public void SpawnIntervalValueChange(float value)
+    public void IntervalValueChange(float count)
     {
-        //エネミの生成インターバル
-        _enemySpawnInterval -= value;
+        //生成時間を早くしたり、遅くする
+        _interval = count;
     }
 }
