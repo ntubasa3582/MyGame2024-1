@@ -12,7 +12,7 @@ public class EffectController : MonoBehaviour
         transform = GetComponent<Transform>();
         levelUpValue = GameObject.FindAnyObjectByType<LevelUpValue>();
         float value = 1 + levelUpValue._valueStorage[4];
-        this.transform.localScale = new Vector3(value, 1, value);
+        this.transform.localScale = new Vector3(value, value, value);
     }
 
 }

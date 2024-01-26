@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Pool;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text _minText;             //経過時間(分)を表示するテキスト
     [SerializeField] Text _secText;             //経過時間(秒)を表示するテキスト
     [SerializeField] Text _enemyCountText;      //現在のエネミーの数を表示するテキスト
+    [SerializeField] Text _enemyLimitText;      //エネミーの生成上限を表示するテキスト
     [SerializeField] Slider _enemyScoreSlider;  //ボス出現までのカウントを表示するスライダー
 
     private void Awake()
@@ -46,6 +48,10 @@ public class UIManager : MonoBehaviour
     public void AddEnemyText(float value)
     {
         //現在のエネミーの数をテキストで表示する
-        _enemyCountText.text = value.ToString("0000");
+        _enemyCountText.text = value.ToString("000");
+    }
+    public void AddEnemyLimitText(float value)
+    {
+        _enemyLimitText.text = value.ToString();
     }
 }

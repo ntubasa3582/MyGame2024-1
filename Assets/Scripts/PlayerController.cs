@@ -20,8 +20,8 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(mousePos, out _clickHit))
             {
                 _clickPosition = _clickHit.point;
-                _clickPosition.y = 1;
-                Instantiate(_particleEffect[0], _clickPosition, Quaternion.identity);
+                _clickPosition.y = 1.5f;
+                Instantiate(_particleEffect[1], _clickPosition, Quaternion.identity);
             }
         }
     }

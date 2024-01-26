@@ -5,23 +5,14 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
     UIManager _uiManager;
-    //ObjectPool _pool = new ObjectPool<GameObject>
-    //(
-    //    createFunc: funcCreate,
-    //    actionOnGet: funcOnGet,
-    //    actionOnRelease: funcOnRelase,
-    //    actionOnDestroy: funcOnDestroy,
-    //    collectionCheck: true,
-    //    defaultCapacity: 10,
-    //    maxSize: 10
-    //);
+    private ObjectPool<GameObject> m_objectPool;                // オブジェクトプール
     [SerializeField] GameObject[] _enemyPrefabs;                //エネミーのプレハブ
     [SerializeField] GameObject[] _spawnPoints;                 //エネミーのスポーン場所のプレハブ
     [SerializeField] float[] _spawnPositionX;                   //エネミーのX座標の出現位置
     [SerializeField] float[] _spawnPositionZ;                   //エネミーのY座標の出現位置
     public int _enemyInstanceCount { get; private set; }        //エネミーの生成カウント
-    //public int _enemyKillCount { get; private set; }            //エネミーを倒した時にカウントする変数
-    public int _enemyUpperLimit { get; private set; } = 10;    //エネミーの生成上限
+    //public int _enemyKillCount { get; private set; }          //エネミーを倒した時にカウントする変数
+    public int _enemyUpperLimit { get; private set; } = 100;    //エネミーの生成上限
     float _time = 0;                                            //時間をいれる変数
     public float _interval { get; private set; } = 1.5f;        //エネミーの生成にかかる時間
 
@@ -33,6 +24,7 @@ public class EnemyManager : MonoBehaviour
         }
         _time = 10; //最初にエネミーを生成するために値を入れておく
         _uiManager = GameObject.FindObjectOfType<UIManager>();
+        _uiManager.AddEnemyLimitText(_enemyUpperLimit);
     }
 
     private void Update()
@@ -41,6 +33,7 @@ public class EnemyManager : MonoBehaviour
         if (_enemyUpperLimit <= _enemyInstanceCount)
         {
             _time = 0;
+            Debug.Log("ゲームオーバー");
         }
         _time += Time.deltaTime;
         if (_time > _interval)
@@ -72,12 +65,6 @@ public class EnemyManager : MonoBehaviour
         Vector3 bossPosition = new Vector3(0, 0, 0);
         Instantiate(_enemyPrefabs[0], bossPosition, Quaternion.identity);
         AddEnemyInstanceCount(1);
-    }
-    public void AddEnemyKillCount(int count)
-    {
-        //_enemyKillCountの値を増やす
-        _enemyInstanceCount -= count;
-        _uiManager.AddEnemyText(_enemyInstanceCount);
     }
     public void AddEnemyInstanceCount(int count)
     {

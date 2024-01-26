@@ -64,8 +64,11 @@ public class EnemyController : MonoBehaviour
     {
         //エフェクトとタイミングを合わせるために遅延している
         yield return new WaitForSeconds(delayTime);
-        _enemyManager.AddEnemyKillCount(1);
         gameManager.AddEnemyKillCount();
         Destroy(gameObject);
+    }
+    private void OnDestroy()
+    {
+        _enemyManager.AddEnemyInstanceCount(-1);
     }
 }
