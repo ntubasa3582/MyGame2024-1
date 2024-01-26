@@ -5,6 +5,7 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
     UIManager _uiManager;
+    GameManager _gameManager;
     private ObjectPool<GameObject> m_objectPool;                // オブジェクトプール
     [SerializeField] GameObject[] _enemyPrefabs;                //エネミーのプレハブ
     [SerializeField] GameObject[] _spawnPoints;                 //エネミーのスポーン場所のプレハブ
@@ -15,6 +16,14 @@ public class EnemyManager : MonoBehaviour
     public int _enemyUpperLimit { get; private set; } = 100;    //エネミーの生成上限
     float _time = 0;                                            //時間をいれる変数
     public float _interval { get; private set; } = 1.5f;        //エネミーの生成にかかる時間
+    private void OnEnable()
+    {
+        _gameManager.GamePause += PauseResume;  //デリゲート登録
+    }
+    private void Disable()
+    {
+        _gameManager.GamePause -= PauseResume;  //デリゲート解除
+    }
 
     private void Awake()
     {
@@ -57,6 +66,31 @@ public class EnemyManager : MonoBehaviour
         Instantiate(_enemyPrefabs[0], _spawnPos, Quaternion.identity);
         AddEnemyInstanceCount(1);
     }
+
+    void PauseResume(bool isPause)
+    {
+        if (isPause)
+        {
+            //ゲームの動きを止める
+            GamePause();
+        }
+        else
+        {
+            //ゲームを動かす
+            GameResume();
+        }
+    }
+    /// <summary>ゲームの動きを止めるメソッド/summary>
+    private void GamePause()
+    {
+        //動きboolをtrueにする
+    }
+    /// <summary>止まっていたものを動かすメソッド/summary>
+    private void GameResume()
+    {
+        //動きboolをfalseにする
+    }
+
 
     public void BossInstance()
     {

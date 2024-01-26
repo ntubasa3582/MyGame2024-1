@@ -1,22 +1,41 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+    /// <summary>ゲームをポーズするメソッド</summary>
+    public event Action<bool> GamePause;
+    bool _pauseFlag = false;    //ゲームのポーズに必要なフラグ
     UIManager uiManager;
     EnemyManager enemyManager;
     LevelUpValue levelUpValue;
     RandomNumSystem randomNum;
+    [SerializeField] List<GameObject> _ddolObjects;
     public float _money { get;private set; } = 100;                 //強化できる金
     public float _bossEmergenceValue { private get; set; } = 0;     //ボスが出現するまでをカウントする
     float _bossDeathRewardValue = 0;                                //ボスを倒した時の報酬を入れる変数
 
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         uiManager = GameObject.FindAnyObjectByType<UIManager>();
         enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
         levelUpValue = GameObject.FindAnyObjectByType<LevelUpValue>();
         randomNum = GameObject.FindAnyObjectByType<RandomNumSystem>();
-        DontDestroyOnLoad(this.gameObject);
+        for (int i = 0;i < _ddolObjects.Count; i++)
+        {
+            DontDestroyOnLoad(_ddolObjects[i]);
+        }
+        _ddolObjects[1].SetActive(false);
     }
 
     private void Update()
@@ -31,6 +50,21 @@ public class GameManager : MonoBehaviour
             _bossEmergenceValue = 0;
             enemyManager.BossInstance();
             Debug.Log("ボスを倒したら報酬" + _bossDeathRewardValue + "倍");
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Escapeが押されたらゲームをストップする　もう一度押すと再開する
+            _pauseFlag = !_pauseFlag;
+            //GamePause(_pauseFlag);
+            if (_pauseFlag)
+            {
+                _ddolObjects[1].SetActive(_pauseFlag);
+            }
+            else
+            {
+                _ddolObjects[1].SetActive(_pauseFlag);
+            }
+
         }
     }
 
