@@ -22,7 +22,6 @@ public class EnemyManager : MonoBehaviour
         {
             instance = this;
         }
-        _time = 10; //最初にエネミーを生成するために値を入れておく
         _uiManager = GameObject.FindObjectOfType<UIManager>();
         _uiManager.AddEnemyLimitText(_enemyUpperLimit);
     }

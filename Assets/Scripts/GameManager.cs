@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         enemyManager = GameObject.FindAnyObjectByType<EnemyManager>();
         levelUpValue = GameObject.FindAnyObjectByType<LevelUpValue>();
         randomNum = GameObject.FindAnyObjectByType<RandomNumSystem>();
+        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Update()
